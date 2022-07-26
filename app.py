@@ -20,7 +20,7 @@ from extensions import database, commands
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(config.DevelopmentConfig)
+    app.config.from_object(config.ProductionConfig)
 
     JWTManager(app)
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
