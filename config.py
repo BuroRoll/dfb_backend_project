@@ -7,9 +7,9 @@ class Config(object):
     JWT_SECRET_KEY = '3jkewh2jhfblj23*657lb3@$2#$$!241ae$'
 
 
-# class ProductionConfig(Config):
-#     DEBUG = False
-#     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+class ProductionConfig(Config):
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 
 class DevelopmentConfig(Config):
