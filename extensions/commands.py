@@ -21,10 +21,7 @@ models = [Defibrillator, Subsection, User, Log]
 def create_model_table():
     """Create table model in the database"""
     for i in models:
-        # try:
         i.__table__.create(db.engine)
-    # except Exception:
-    #     print('Error create ', i)
 
 
 def init_app(app):

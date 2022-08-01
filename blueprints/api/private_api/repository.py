@@ -46,18 +46,6 @@ def get_current_defibrillator_db(id):
     return defibrillator
 
 
-def change_device_status(device_id, new_status):
-    try:
-        defibrillator = Defibrillator.query. \
-            filter_by(id=device_id). \
-            first()
-        defibrillator.status = new_status
-        defibrillator.save()
-        return defibrillator
-    except Exception:
-        return None
-
-
 def get_device_logs_db(device_id):
     Log.serialize_only = ('id', 'user', 'date_log', 'status_code', 'tag')
     logs_list = Log.query \

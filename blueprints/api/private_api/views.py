@@ -7,7 +7,6 @@ from flask_jwt_extended import get_jwt
 
 from models.Log import StatusCodeEnum, tags
 from .repository import *
-from .repository import change_device_status
 from ...auth.repository import get_user_data
 
 api = Blueprint('api', __name__)
@@ -16,6 +15,7 @@ api = Blueprint('api', __name__)
 @api.route('/add_defibrillator', methods=['POST'])
 @jwt_required()
 def add_defibrillator():
+    """ Добавление нового дефибриллятора """
     user_id = get_jwt_identity()
     device_id = request.json.get('device_id', None)
     defibrillator_name = request.json.get('defibrillator_name', None)
@@ -38,6 +38,7 @@ def add_defibrillator():
 @api.route('/defibrillator_list/<status>', methods=['GET'])
 @jwt_required()
 def get_all_defibrillators(status):
+    """ Получение всех дефибрилляторов с определённым статусом """
     claims = get_jwt()
     user_id = claims['user_id']
     defibrillators_list = get_all_defibrillators_db(status, user_id)
@@ -47,17 +48,9 @@ def get_all_defibrillators(status):
 @api.route('/get_defibrillator/<id>', methods=['GET'])
 @jwt_required()
 def get_current_defibrillator(id):
+    """ Получение данных о конкретном дефибрилляторе """
     defibrillator = get_current_defibrillator_db(id)
     return json.dumps(defibrillator.to_dict())
-
-
-@api.route('/start_service/<device_id>', methods=['GET'])
-@jwt_required()
-def start_service(device_id):
-    status = change_device_status(device_id=device_id, new_status='service')
-    if status is None:
-        return jsonify(error='Не удалось обновить данные, попробуйте позже')
-    return jsonify(status='ok', device_id=device_id)
 
 
 @api.route('/service_device/<device_id>', methods=['PUT'])
@@ -66,7 +59,7 @@ def service_device(device_id):
     device = get_device_db(device_id)
     old_status = device.status.name
     new_status = ''
-    if device.status.name == 'need_service':
+    if device.status.name == 'need_service' or device.status.name == 'ready_to_use':
         device.status = 'service'
         new_status = 'service'
     else:
@@ -76,18 +69,10 @@ def service_device(device_id):
     return jsonify(old_status=old_status, new_status=new_status)
 
 
-@api.route('/end_service/<device_id>', methods=['GET'])
-@jwt_required()
-def end_service(device_id):
-    status = change_device_status(device_id=device_id, new_status='ready_to_use')
-    if status is None:
-        return jsonify(error='Не удалось обновить данные, попробуйте позже')
-    return jsonify(status='ok', device_id=device_id)
-
-
 @api.route('/logs/<device_id>', methods=['GET'])
 @jwt_required()
 def get_device_logs(device_id):
+    """ Получение логов для конкретного устройства """
     device_logs = get_device_logs_db(device_id)
     if device_logs is None:
         return jsonify(error='Не удалось получить данные, попробуйте позже')
@@ -97,6 +82,7 @@ def get_device_logs(device_id):
 @api.route('/check_device/<device_id>', methods=['GET'])
 @jwt_required()
 def check_device(device_id):
+    """ Проверка наличия устройства в базе данных """
     device = get_device_db(device_id)
     if device is None:
         return jsonify(error='no device in database'), 204

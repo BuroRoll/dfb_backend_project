@@ -20,6 +20,3 @@ def get_current_defibrillator(id):
     defibrillator = get_current_defibrillator_db(id)
     return json.dumps(defibrillator.to_dict())
 
-@public_api.route('/hello', methods=['GET'])
-def hello():
-    return jsonify(hello='world')

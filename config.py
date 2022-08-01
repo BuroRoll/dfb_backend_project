@@ -1,5 +1,6 @@
 import os
 
+
 class Config(object):
     DEBUG = False
     # TESTING = False
@@ -15,7 +16,6 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    # FLASK_ENV=development
     DEVELOPMENT = True
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = "postgresql://danilkonkov:22012011@localhost:5432/dfb_db"
+    SQLALCHEMY_DATABASE_URI = 'postgresql://danilkonkov:22012011@localhost:5432/dfb_db'

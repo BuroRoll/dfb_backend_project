@@ -20,7 +20,7 @@ from extensions import database, commands
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(config.ProductionConfig)
+    app.config.from_object(config.DevelopmentConfig)
 
     JWTManager(app)
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -34,6 +34,7 @@ def create_app():
     app.register_blueprint(public_api, url_prefix='/public_api')
     app.register_blueprint(api, url_prefix='/api')
 
+    # TODO Переделать панель администрирования
     admin = Admin(app, name='Дефибрилляторы', template_mode='bootstrap3')
     admin.add_view(ModelView(User, db.session))
     admin.add_view(ModelView(Subsection, db.session))
